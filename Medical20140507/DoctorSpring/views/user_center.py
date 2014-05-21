@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from DoctorSpring.models import User,Patent,Doctor,Diagnose
 from DoctorSpring.models import User,DiagnoseComment,Message
 from DoctorSpring.util import result_status as rs,object2dict
-from DoctorSpring.util.constant import MessageUserType
+from DoctorSpring.util.constant import MessageUserType,Pagger
 import  data_change_service as dataChangeService
 import json
 
@@ -32,11 +32,12 @@ def endterDoctorHome(doctorId):
     messageCount=Message.getMessageCountByReceiver(doctorId)
     resultDate['messageCount']=messageCount
 
-    diagnoseCount=Diagnose.getDiagnoseCountByDoctorId(doctorId)
+    diagnoseCount=Diagnose.getNewDiagnoseCountByDoctorId(doctorId)
     resultDate['diagnoseCount']=diagnoseCount
 
     resultDate['doctor']=doctor
-    diagnoses=Diagnose.getDiagnosesByDoctorId(doctorId)
+    pager=Pagger(1,20)
+    diagnoses=Diagnose.getDiagnosesByDoctorId(doctorId,pager)
     diagnoseDict=dataChangeService.userCenterDiagnoses(diagnoses)
     resultDate['diagnoses']=diagnoseDict
     return render_template("doctorHome.html",data=resultDate)

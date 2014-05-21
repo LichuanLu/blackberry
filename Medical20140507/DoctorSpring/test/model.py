@@ -11,6 +11,7 @@ from DoctorSpring.models.pathology import *
 from DoctorSpring.models.diagnoseDocument import Diagnose
 from database import db_session as session
 from datetime import  datetime
+from DoctorSpring.util.constant import Pagger
 
 
 
@@ -57,8 +58,10 @@ class DiagnoseTestCase(unittest.TestCase):
 
     def test_addPathology(self):
         pathology=Pathology()
-        pathology.diagnoseDocId=1
-        pathology.docmFileId=1
+
+        #pathology.diagnoseDocId=1
+
+        #pathology.docmFileId=1
         pathology.hospticalId=1
         pathology.caseHistory="没有病史"
         pathology.status=0
@@ -87,7 +90,8 @@ class DiagnoseTestCase(unittest.TestCase):
         diagnose.status=0
         Diagnose.save(diagnose)
     def test_getDiagnose(self):
-        diagnoses=Diagnose.getDiagnosesByDoctorId(1)
+        pager=Pagger(1,20)
+        diagnoses=Diagnose.getDiagnosesByDoctorId(1,pager,None)
         print len(diagnoses)
     def test_getPatientListByDoctorId(self):
         patients=Diagnose.getPatientListByDoctorId(1)
