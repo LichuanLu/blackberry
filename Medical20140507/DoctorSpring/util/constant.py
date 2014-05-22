@@ -13,7 +13,7 @@ class DiagnoseStatus(ModelStatus):
     NeedTriage=3 #待分诊
     Triaging=4   #分诊中
     NeedDiagnose=5 #待诊断
-    DiagNosed=6 #诊断完成
+    Diagnosed=6 #诊断完成
     NeedUpdate=7 #需要更新信息
     UnableDiagnose=8#无法诊断
 

@@ -28,7 +28,7 @@ from sqlalchemy.orm import  relationship,backref
 __author__ = 'chengc017'
 
 import sqlalchemy as sa
-from DoctorSpring.util.constant import ModelStatus,Pagger,SystemTimeLimiter
+from DoctorSpring.util.constant import Pagger,SystemTimeLimiter,DiagnoseStatus
 from datetime import datetime
 from database import Base,db_session as session
 from sqlalchemy.orm import relationship,backref
@@ -79,7 +79,7 @@ class Diagnose(Base):
                                                       Diagnose.createDate>startTime,Diagnose.createDate<endTime)\
                     .offset(pagger.getOffset()).limit(pagger.getLimitCount()).all()
             else:
-                return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status!=ModelStatus.Del,
+                return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status!=DiagnoseStatus.Del,
                                                       Diagnose.createDate>startTime,Diagnose.createDate<endTime) \
                     .offset(pagger.getOffset()).limit(pagger.getLimitCount()).all()
     @classmethod
@@ -89,16 +89,16 @@ class Diagnose(Base):
                 return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==status,
                                                       Diagnose.createDate>startTime,Diagnose.createDate<endTime).count()
             else:
-                return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status!=ModelStatus.Del,
+                return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status!=DiagnoseStatus.Del,
                                                       Diagnose.createDate>startTime,Diagnose.createDate<endTime).count()
     @classmethod
     def getNewDiagnoseCountByDoctorId(cls,doctorId):
         if doctorId:
-            return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==ModelStatus.Normal).count()
+            return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==DiagnoseStatus.NeedDiagnose).count()
     @classmethod
     def getPatientListByDoctorId(cls,doctorId):
         if doctorId:
-            diagnoses =session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==ModelStatus.Normal).group_by(Diagnose.patientId).all()
+            diagnoses =session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==DiagnoseStatus.Diagnosed).group_by(Diagnose.patientId).all()
             if diagnoses and len(diagnoses)>0:
                 patients=[]
                 for diagnose in diagnoses:
