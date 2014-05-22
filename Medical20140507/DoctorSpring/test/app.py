@@ -28,7 +28,13 @@ class FlaskrTestCase(unittest.TestCase):
         rs = self.app.get('/observer/1/diagnoseCommentList.json',follow_redirects=True)
         print rs
 
-
+    def test_addConsult(self):
+        rv = self.app.post('/consult/add', data=dict(
+            userId=1,
+            doctorId=1,
+            title='咨询一下关于颈部问题的',
+            content='咨询一下关于颈部问题的解决方案'
+        ), follow_redirects=True)
 
 
 if __name__ == '__main__':

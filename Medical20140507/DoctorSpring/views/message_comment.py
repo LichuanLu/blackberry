@@ -10,7 +10,7 @@ from database import  db_session
 from sqlalchemy.exc import IntegrityError
 from DoctorSpring.models import User,Patent
 from DoctorSpring.models import User,Comment,Message ,Consult
-from DoctorSpring.util import result_status as rs,object2dict
+from DoctorSpring.util import result_status as rs,object2dict,constant
 import json
 
 import config
@@ -38,13 +38,13 @@ def addDiagnoseComment():
 @mc.route('/observer/<int:userId>/diagnoseCommentList.json', methods = ['GET', 'POST'])
 def diagnoseCommentsByObserver(userId):
 
-    diagnoseComments=Comment.getCommentByUser(userId)
+    diagnoseComments=Comment.getCommentByUser(userId,type=constant.CommentType)
     if diagnoseComments is None or len(diagnoseComments)<1:
-        return jsonify(rs.SUCCESS.__dict__)
+        return json.dumps(rs.SUCCESS.__dict__,ensure_ascii=False)
     diagnoseCommentsDict=object2dict.objects2dicts(diagnoseComments)
     resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,diagnoseCommentsDict)
     resultDict=resultStatus.__dict__
-    return jsonify(resultDict)
+    return json.dumps(resultDict,ensure_ascii=False)
 @mc.route('/receiver/<int:receiverId>/diagnoseCommentList.json', methods = ['GET', 'POST'])
 def diagnoseCommentsByReceiver(receiverId):
 
@@ -127,7 +127,7 @@ def remarkMessage(messageId):
 
 @mc.route('/consult/add', methods = ['GET', 'POST'])
 def addConsult():
-    form =  ConsultForm(request.args)
+    form =  ConsultForm(request.form)
     formResult=form.validate()
     if formResult.status==rs.SUCCESS.status:
         #session['remember_me'] = form.remember_me.data
