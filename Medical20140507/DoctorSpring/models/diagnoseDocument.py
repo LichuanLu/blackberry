@@ -106,6 +106,45 @@ class Diagnose(Base):
                 return patients
 
 
+class DiagnoseTemplate(Base):
+    __tablename__ = 'diagnoseTemplate'
+    __table_args__ = {
+        'mysql_charset': 'utf8',
+        }
+
+    id = sa.Column(sa.Integer, primary_key = True, autoincrement = True)
+    diagnoseMethod=sa.Column(sa.String(256))
+    diagnosePosition=sa.Column(sa.String(256))
+    techDesc=sa.Column(sa.String(512))
+    imageDesc=sa.Column(sa.TEXT)
+    diagnoseDesc=sa.Column(sa.String(512))
+    #sa.Index('diagnoseTemplate_method_position_diagnoseDesc', 'diagnoseMethod', 'diagnosePosition','diagnoseDesc')
+
+    def __init__(self,diagnoseMethod,diagnosePosition,techDesc,imageDesc,diagnoseDesc):
+        self.diagnoseMethod=diagnoseMethod
+        self.diagnosePosition=diagnosePosition
+        self.techDesc=techDesc
+        self.imageDesc=imageDesc
+        self.diagnoseDesc=diagnoseDesc
+
+    @classmethod
+    def save(cls,diagnoseTemplate):
+        if diagnoseTemplate:
+            session.add(diagnoseTemplate)
+            session.commit()
+            session.flush()
+    @classmethod
+    def getDiagnosePostion(cls,diagnoseMethod):
+        if diagnoseMethod:
+            return session.query(DiagnoseTemplate.diagnosePosition).filter(DiagnoseTemplate.diagnoseMethod==diagnoseMethod)\
+                .group_by(DiagnoseTemplate.diagnosePosition).all()
+    @classmethod
+    def getDiagnoseAndImageDescs(cls,diagnoseMethod,diagnosePosition):
+        if diagnoseMethod and diagnosePosition:
+            return session.query(DiagnoseTemplate.diagnosePosition,DiagnoseTemplate.diagnoseDesc,
+                                 DiagnoseTemplate.imageDesc).filter(DiagnoseTemplate.diagnoseMethod==diagnoseMethod,
+                                                                           DiagnoseTemplate.diagnosePosition==diagnosePosition) \
+                .group_by(DiagnoseTemplate.diagnoseDesc).all()
 
 
 
