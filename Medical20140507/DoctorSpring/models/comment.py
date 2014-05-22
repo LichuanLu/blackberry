@@ -49,11 +49,11 @@ class Comment(Base):
         self.type=constant.CommentType.DiagnoseComment
     @classmethod
     def getCommentByUser(cls,observerId,status=ModelStatus.Normal):
-        return session.query(DiagnoseComment).filter(DiagnoseComment.observer == observerId,DiagnoseComment.status==status).all()
+        return session.query(Comment).filter(Comment.observer == observerId,Comment.status==status).all()
     @classmethod
     def getCommentByReceiver(cls,receiverId,status=ModelStatus.Normal):
-        return session.query(DiagnoseComment).filter(DiagnoseComment.receiver==receiverId,DiagnoseComment.status==status).all()
+        return session.query(Comment).filter(Comment.receiver==receiverId,Comment.status==status).all()
     @classmethod
     def getCommentBydiagnose(cls,diagnoseId,status=ModelStatus.Normal):
-        return session.query(DiagnoseComment).filter(DiagnoseComment.diagnoseId==diagnoseId,DiagnoseComment.status==status).all()
+        return session.query(Comment).filter(Comment.diagnoseId==diagnoseId,Comment.status==status).all()
 
