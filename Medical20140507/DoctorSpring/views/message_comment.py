@@ -137,7 +137,7 @@ def addConsult():
         #flash('成功添加诊断评论')
         return json.dumps(formResult.__dict__,ensure_ascii=False)
     return json.dumps(formResult.__dict__,ensure_ascii=False)
-@mc.route('doctor/<int:doctorId>/consultList', methods = ['GET', 'POST'])
+@mc.route('/doctor/<int:doctorId>/consultList', methods = ['GET', 'POST'])
 def getConsultsByDoctor(doctorId):
     if doctorId:
         consuts=Consult.getConsultsByDoctorId(doctorId)
@@ -147,8 +147,8 @@ def getConsultsByDoctor(doctorId):
         return json.dumps(resultDict,ensure_ascii=False)
     return json.dumps(rs.PARAM_ERROR,ensure_ascii=False)
 
-@mc.route('user/<int:userId>/consultList', methods = ['GET', 'POST'])
-def getConsultsByDoctor(userId):
+@mc.route('/user/<int:userId>/consultList', methods = ['GET', 'POST'])
+def getConsultsByUser(userId):
     if userId:
         consuts=Consult.getConsultsByUserId(userId)
         consutsDict=object2dict.objects2dicts(consuts)
