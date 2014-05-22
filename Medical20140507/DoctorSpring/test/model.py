@@ -3,7 +3,7 @@
 __author__ = 'chengc017'
 import os
 import unittest
-from DoctorSpring.models.comment import DiagnoseComment
+from DoctorSpring.models.comment import Comment
 from DoctorSpring.models.doctor import Doctor
 from DoctorSpring.models.user import User
 from DoctorSpring.models.patent import Patent
@@ -20,7 +20,7 @@ import tempfile
 class CommentTestCase(unittest.TestCase):
 
     def test_addcomment(self):
-        diagnoseComment=DiagnoseComment(1,1,1,"诊断很不错，非常感谢")
+        diagnoseComment=Comment(1,1,1,"诊断很不错，非常感谢")
         session.add(diagnoseComment)
         session.commit()
 

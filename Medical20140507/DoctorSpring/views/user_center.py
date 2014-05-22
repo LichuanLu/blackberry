@@ -41,3 +41,11 @@ def endterDoctorHome(doctorId):
     diagnoseDict=dataChangeService.userCenterDiagnoses(diagnoses)
     resultDate['diagnoses']=diagnoseDict
     return render_template("doctorHome.html",data=resultDate)
+
+@uc.route('/doctor/<int:doctorId>/patientList',  methods = ['GET', 'POST'])
+def getPatients(doctorId):
+     patients=Diagnose.getPatientListByDoctorId(doctorId)
+     patientsDict=object2dict.objects2dicts(patients)
+     resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,patientsDict)
+     resultDict=resultStatus.__dict__
+     return json.dumps(resultDict,ensure_ascii=False)

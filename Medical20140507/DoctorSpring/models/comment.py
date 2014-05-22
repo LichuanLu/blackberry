@@ -19,6 +19,31 @@ class Consult(Base):
     content=sa.Column(sa.String(51200))
     createTime=sa.Column(sa.DateTime)
     status=sa.Column(sa.Integer)
+    def __init__(self,userId,doctorId,title,content):
+        self.userId=userId
+        self.doctorId=doctorId
+        #self.title=title
+        self.title=title
+        self.content=content
+        self.createTime=datetime.now()
+        self.status=constant.ModelStatus.Normal
+    @classmethod
+    def save(cls,consult):
+        if consult:
+            session.add(consult)
+            session.commit()
+            session.flush()
+    @classmethod
+    def getConsultsByDoctorId(cls,doctorId):
+        if doctorId is None:
+            return
+        return session.query(Consult).filter(Consult.doctorId==doctorId,Consult.status==ModelStatus.Normal).all()
+    @classmethod
+    def getConsultsByUserId(cls,userId):
+        if userId is None:
+            return
+        return session.query(Consult).filter(Consult.userId==userId,Consult.status==ModelStatus.Normal).all()
+
 
 class Comment(Base):
 

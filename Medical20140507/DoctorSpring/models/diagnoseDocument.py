@@ -98,7 +98,13 @@ class Diagnose(Base):
     @classmethod
     def getPatientListByDoctorId(cls,doctorId):
         if doctorId:
-            return session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==ModelStatus.Normal).group_by(Diagnose.patientId).all()
+            diagnoses =session.query(Diagnose).filter(Diagnose.doctorId==doctorId,Diagnose.status==ModelStatus.Normal).group_by(Diagnose.patientId).all()
+            if diagnoses and len(diagnoses)>0:
+                patients=[]
+                for diagnose in diagnoses:
+                    patients.append(diagnose.patient)
+                return patients
+
 
 
 

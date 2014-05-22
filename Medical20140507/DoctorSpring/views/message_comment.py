@@ -4,12 +4,12 @@ __author__ = 'ccheng'
 from flask import Flask, request, session, g, redirect, url_for, Blueprint, jsonify
 from flask import abort, render_template, flash
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from forms import LoginForm, RegisterForm ,CommentsForm ,MessageForm
+from forms import LoginForm, RegisterForm ,CommentsForm ,MessageForm,ConsultForm
 from DoctorSpring import lm
 from database import  db_session
 from sqlalchemy.exc import IntegrityError
 from DoctorSpring.models import User,Patent
-from DoctorSpring.models import User,Comment,Message
+from DoctorSpring.models import User,Comment,Message ,Consult
 from DoctorSpring.util import result_status as rs,object2dict
 import json
 
@@ -124,4 +124,39 @@ def remarkMessage(messageId):
     resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,result)
     resultDict=resultStatus.__dict__
     return jsonify(resultDict)
+
+@mc.route('/consult/add', methods = ['GET', 'POST'])
+def addConsult():
+    form =  ConsultForm(request.args)
+    formResult=form.validate()
+    if formResult.status==rs.SUCCESS.status:
+        #session['remember_me'] = form.remember_me.data
+        # login and validate the user...
+        consult=Consult(form.userId,form.doctorId,form.title,form.content)
+        Consult.save(consult)
+        #flash('成功添加诊断评论')
+        return json.dumps(formResult.__dict__,ensure_ascii=False)
+    return json.dumps(formResult.__dict__,ensure_ascii=False)
+@mc.route('doctor/<int:doctorId>/consultList', methods = ['GET', 'POST'])
+def getConsultsByDoctor(doctorId):
+    if doctorId:
+        consuts=Consult.getConsultsByDoctorId(doctorId)
+        consutsDict=object2dict.objects2dicts(consuts)
+        resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,consutsDict)
+        resultDict=resultStatus.__dict__
+        return json.dumps(resultDict,ensure_ascii=False)
+    return json.dumps(rs.PARAM_ERROR,ensure_ascii=False)
+
+@mc.route('user/<int:userId>/consultList', methods = ['GET', 'POST'])
+def getConsultsByDoctor(userId):
+    if userId:
+        consuts=Consult.getConsultsByUserId(userId)
+        consutsDict=object2dict.objects2dicts(consuts)
+        resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,consutsDict)
+        resultDict=resultStatus.__dict__
+        return json.dumps(resultDict,ensure_ascii=False)
+    return json.dumps(rs.PARAM_ERROR,ensure_ascii=False)
+
+
+
 

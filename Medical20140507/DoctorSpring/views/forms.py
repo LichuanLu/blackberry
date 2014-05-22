@@ -2,6 +2,7 @@
 __author__ = 'Jeremy'
 from wtforms import Form, TextField, PasswordField, DateField, IntegerField, SelectField, BooleanField
 from wtforms.validators import Required, Email, EqualTo, Length
+from DoctorSpring.util.result_status import *
 
 class RegisterForm(Form):
     name = TextField('Username', validators=[Required(), Length(min=3, max=25)])
@@ -40,4 +41,31 @@ class MessageForm(Form):
     content = TextField('content', validators=[Required()])
     title = TextField('title')
     type=IntegerField('type', validators=[Required()])
+
+class ConsultForm(object):
+    userId =None
+    doctorId=None
+    content =None
+    title =None
+    def __init__(self,args):
+        self.userId=args.get('userId')
+        self.doctorId=args.get('doctorId')
+        self.title=args.get('title')
+        self.content=args.get('content')
+    def validate(self):
+        try:
+            if self.userId is None:
+                return FAILURE
+            if self.doctorId is None:
+                return FAILURE
+            if self.title is None:
+                return FAILURE
+            if self.content is None or len(self.content)<10:
+                failure=ResultStatus(FAILURE.status,"输入的内容长度必须大于等于10")
+                return  failure
+        except Exception,e:
+            return FAILURE
+        return SUCCESS
+
+
 

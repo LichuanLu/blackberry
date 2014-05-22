@@ -18,7 +18,7 @@ class Patent(Base):
     identityCode = sa.Column(sa.String(64))
     gender = sa.Column(sa.INTEGER)
     birthDate = sa.Column(sa.DATE)
-    Name = sa.Column(sa.String(64))
+    name = sa.Column(sa.String(64))
     status = sa.Column(sa.INTEGER)
 
     def __init__(self, userId=None):
