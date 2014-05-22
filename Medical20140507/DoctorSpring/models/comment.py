@@ -4,7 +4,7 @@ import sqlalchemy as sa
 from datetime import datetime
 from DoctorSpring.util import constant
 from database import db_session as session
-from DoctorSpring.util.constant import ModelStatus
+from DoctorSpring.util.constant import ModelStatus,CommentType
 
 from database import Base
 class Consult(Base):
@@ -13,14 +13,13 @@ class Consult(Base):
         'mysql_charset': 'utf8',
     }
     id= sa.Column(sa.BigInteger, primary_key = True, autoincrement = True)
-    observer=sa.Column(sa.Integer)
-    receiver=sa.Column(sa.Integer )
+    userId=sa.Column(sa.Integer)
+    doctorId=sa.Column(sa.Integer )
     title=sa.Column(sa.String(256))
     content=sa.Column(sa.String(51200))
     createTime=sa.Column(sa.DateTime)
-    type=sa.Column(sa.Integer)
     status=sa.Column(sa.Integer)
-    parent_commend_id=sa.Column(sa.BigInteger)
+
 class Comment(Base):
 
     __tablename__ = 'comment'
@@ -48,12 +47,12 @@ class Comment(Base):
         self.status=constant.ModelStatus.Normal
         self.type=constant.CommentType.DiagnoseComment
     @classmethod
-    def getCommentByUser(cls,observerId,status=ModelStatus.Normal):
-        return session.query(Comment).filter(Comment.observer == observerId,Comment.status==status).all()
+    def getCommentByUser(cls,observerId,status=ModelStatus.Normal,type=CommentType.Normal):
+        return session.query(Comment).filter(Comment.observer == observerId,Comment.status==status,Comment.type==type).all()
     @classmethod
-    def getCommentByReceiver(cls,receiverId,status=ModelStatus.Normal):
-        return session.query(Comment).filter(Comment.receiver==receiverId,Comment.status==status).all()
+    def getCommentByReceiver(cls,receiverId,status=ModelStatus.Normal,type=CommentType.Normal):
+        return session.query(Comment).filter(Comment.receiver==receiverId,Comment.status==status,Comment.type==type).all()
     @classmethod
-    def getCommentBydiagnose(cls,diagnoseId,status=ModelStatus.Normal):
-        return session.query(Comment).filter(Comment.diagnoseId==diagnoseId,Comment.status==status).all()
+    def getCommentBydiagnose(cls,diagnoseId,status=ModelStatus.Normal,type=CommentType.Normal):
+        return session.query(Comment).filter(Comment.diagnoseId==diagnoseId,Comment.status==status,Comment.type==type).all()
 
