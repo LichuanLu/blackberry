@@ -7,8 +7,8 @@ from database import db_session as session
 from DoctorSpring.util.constant import ModelStatus
 
 from database import Base
-class Comment(Base):
-    __tablename__ = 'commend'
+class Consult(Base):
+    __tablename__ = 'consult'
     __table_args__ = {
         'mysql_charset': 'utf8',
     }
@@ -21,17 +21,15 @@ class Comment(Base):
     type=sa.Column(sa.Integer)
     status=sa.Column(sa.Integer)
     parent_commend_id=sa.Column(sa.BigInteger)
-class DiagnoseComment(Base):
+class Comment(Base):
 
-    __tablename__ = 'diagnose_commend'
+    __tablename__ = 'comment'
     __table_args__ = {
         'mysql_charset': 'utf8',
         }
     id= sa.Column(sa.BigInteger, primary_key = True, autoincrement = True)
     observer=sa.Column(sa.Integer)
     receiver=sa.Column(sa.Integer )
-    observerType=sa.Column(sa.SmallInteger)
-    receiverType=sa.Column(sa.SmallInteger)
     title=sa.Column(sa.String(256))
     content=sa.Column(sa.String(51200))
     createTime=sa.Column(sa.DateTime)

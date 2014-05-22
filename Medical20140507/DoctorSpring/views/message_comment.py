@@ -9,7 +9,7 @@ from DoctorSpring import lm
 from database import  db_session
 from sqlalchemy.exc import IntegrityError
 from DoctorSpring.models import User,Patent
-from DoctorSpring.models import User,DiagnoseComment,Message
+from DoctorSpring.models import User,Comment,Message
 from DoctorSpring.util import result_status as rs,object2dict
 import json
 
@@ -28,7 +28,7 @@ def addDiagnoseComment():
     if form.validate_on_submit():
         #session['remember_me'] = form.remember_me.data
         # login and validate the user...
-        diagnoseComment=DiagnoseComment(form.userId.data,form.receiverId.data,form.diagnoseId.data,form.content.data)
+        diagnoseComment=Comment(form.userId.data,form.receiverId.data,form.diagnoseId.data,form.content.data)
         db_session.add(diagnoseComment)
         db_session.commit()
         db_session.flush()
@@ -38,7 +38,7 @@ def addDiagnoseComment():
 @mc.route('/observer/<int:userId>/diagnoseCommentList.json', methods = ['GET', 'POST'])
 def diagnoseCommentsByObserver(userId):
 
-    diagnoseComments=DiagnoseComment.getCommentByUser(userId)
+    diagnoseComments=Comment.getCommentByUser(userId)
     if diagnoseComments is None or len(diagnoseComments)<1:
         return jsonify(rs.SUCCESS.__dict__)
     diagnoseCommentsDict=object2dict.objects2dicts(diagnoseComments)
@@ -48,7 +48,7 @@ def diagnoseCommentsByObserver(userId):
 @mc.route('/receiver/<int:receiverId>/diagnoseCommentList.json', methods = ['GET', 'POST'])
 def diagnoseCommentsByReceiver(receiverId):
 
-    diagnoseComments=DiagnoseComment.getCommentByReceiver(receiverId)
+    diagnoseComments=Comment.getCommentByReceiver(receiverId)
     if diagnoseComments is None or len(diagnoseComments)<1:
         return jsonify(rs.SUCCESS.__dict__)
     diagnoseCommentsDict=object2dict.objects2dicts(diagnoseComments)
@@ -59,7 +59,7 @@ def diagnoseCommentsByReceiver(receiverId):
 @mc.route('/diagnose/<int:diagnoseId>/diagnoseCommentList.json', methods = ['GET', 'POST'])
 def diagnoseCommentsByDiagnose(diagnoseId):
 
-    diagnoseComments=DiagnoseComment.getCommentBydiagnose(diagnoseId)
+    diagnoseComments=Comment.getCommentBydiagnose(diagnoseId)
     if diagnoseComments is None or len(diagnoseComments)<1:
         return jsonify(rs.SUCCESS.__dict__)
     diagnoseCommentsDict=object2dict.objects2dicts(diagnoseComments)

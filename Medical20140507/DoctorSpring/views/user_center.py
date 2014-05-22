@@ -9,7 +9,7 @@ from DoctorSpring import lm
 from database import  db_session
 from sqlalchemy.exc import IntegrityError
 from DoctorSpring.models import User,Patent,Doctor,Diagnose
-from DoctorSpring.models import User,DiagnoseComment,Message
+from DoctorSpring.models import User,Comment,Message
 from DoctorSpring.util import result_status as rs,object2dict
 from DoctorSpring.util.constant import MessageUserType,Pagger
 import  data_change_service as dataChangeService

@@ -9,6 +9,7 @@ class MessageStatus(ModelStatus):
 class CommentType(object):
     DiagnoseComment=0
     Normal=1
+
 class MessageType(object):
     pass
 class MessageUserType(object):
