@@ -8,10 +8,11 @@ from forms import LoginForm, RegisterForm ,CommentsForm ,MessageForm
 from DoctorSpring import lm
 from database import  db_session
 from sqlalchemy.exc import IntegrityError
-from DoctorSpring.models import User,Patent,Doctor,Diagnose
+from DoctorSpring.models import User,Patent,Doctor,Diagnose ,DiagnoseTemplate
 from DoctorSpring.models import User,Comment,Message
 from DoctorSpring.util import result_status as rs,object2dict
 from DoctorSpring.util.constant import MessageUserType,Pagger
+
 import  data_change_service as dataChangeService
 import json
 
@@ -49,3 +50,18 @@ def getPatients(doctorId):
      resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,patientsDict)
      resultDict=resultStatus.__dict__
      return json.dumps(resultDict,ensure_ascii=False)
+@uc.route('/diagnoseTemplate/postionList',  methods = ['GET', 'POST'])
+def getPostionList():
+    diagnoseMethod=request.args.get('diagnoseMethod')
+    diagnosePositions=DiagnoseTemplate.getDiagnosePostion(diagnoseMethod)
+    resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,diagnosePositions)
+    resultDict=resultStatus.__dict__
+    return json.dumps(resultDict,ensure_ascii=False)
+@uc.route('/diagnoseTemplate/diagnoseAndImageDesc',  methods = ['GET', 'POST'])
+def getDiagnoseAndImageDescList():
+    diagnoseMethod=request.args.get('diagnoseMethod')
+    diagnosePostion=request.args.get('diagnosePostion')
+    diagnoseAndImageDescs=DiagnoseTemplate.getDiagnoseAndImageDescs(diagnoseMethod,diagnosePostion)
+    resultStatus=rs.ResultStatus(rs.SUCCESS.status,rs.SUCCESS.msg,diagnoseAndImageDescs)
+    resultDict=resultStatus.__dict__
+    return json.dumps(resultDict,ensure_ascii=False)
