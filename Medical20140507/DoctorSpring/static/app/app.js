@@ -29,7 +29,7 @@ define(["backbone", "marionette", "utils/reqcmd", "config/base/auth",'homepage/h
 				RegisterApp.API.registerPatient();
 			} else if(location.indexOf("register/doctor") != -1){
 				RegisterApp.API.registerDoctor();
-			} else if(location.indexOf("doctorhome") != -1){
+			} else if(location.indexOf("doctor") != -1){
 				DoctorHomeApp.API.show();
 			} else if(location.indexOf("patienthome") != -1){
 				PatientHomeApp.API.show();
