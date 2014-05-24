@@ -8,7 +8,7 @@ from DoctorSpring.models.doctor import Doctor
 from DoctorSpring.models.user import User
 from DoctorSpring.models.patent import Patent
 from DoctorSpring.models.pathology import *
-from DoctorSpring.models.diagnoseDocument import Diagnose
+from DoctorSpring.models.diagnoseDocument import *
 from database import db_session as session
 from datetime import  datetime
 from DoctorSpring.util.constant import Pagger
@@ -23,6 +23,20 @@ class CommentTestCase(unittest.TestCase):
         diagnoseComment=Comment(1,1,1,"诊断很不错，非常感谢")
         session.add(diagnoseComment)
         session.commit()
+
+class DiagnoseTemplateTestCase(unittest.TestCase):
+
+    def test_addcomment(self):
+        diagnoseTemplate=DiagnoseTemplate()
+        diagnoseTemplate.diagnoseMethod='x线'
+        diagnoseTemplate.diagnosePosition='骨关节病变'
+        diagnoseTemplate.diagnoseDesc='心肺骨未见异常'
+        diagnoseTemplate.imageDesc='左尺桡骨形态，骨密度正常，未见明确骨质增生及破坏，左尺桡骨形态，骨密度正常，未见明确骨质增生及破坏，左尺桡骨形态，骨密度正常，未见明确骨质增生及破坏'
+        session.add(diagnoseTemplate)
+        session.commit()
+    def test_getDiagnosePostion(self):
+        diagnoseTemplates=DiagnoseTemplate.getDiagnosePostion('x线')
+        print diagnoseTemplates
 
 class UserTestCase(unittest.TestCase):
     def test_addUser(self):

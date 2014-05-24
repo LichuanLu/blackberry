@@ -6,6 +6,7 @@ from  sqlalchemy import distinct
 
 from database import Base
 from sqlalchemy.orm import  relationship,backref
+import uuid
 
 
 # class Post(Base):
@@ -28,7 +29,7 @@ from sqlalchemy.orm import  relationship,backref
 __author__ = 'chengc017'
 
 import sqlalchemy as sa
-from DoctorSpring.util.constant import Pagger,SystemTimeLimiter,DiagnoseStatus
+from DoctorSpring.util.constant import Pagger,SystemTimeLimiter,DiagnoseStatus,ReportStatus
 from datetime import datetime
 from database import Base,db_session as session
 from sqlalchemy.orm import relationship,backref
@@ -120,7 +121,7 @@ class DiagnoseTemplate(Base):
     diagnoseDesc=sa.Column(sa.String(512))
     #sa.Index('diagnoseTemplate_method_position_diagnoseDesc', 'diagnoseMethod', 'diagnosePosition','diagnoseDesc')
 
-    def __init__(self,diagnoseMethod,diagnosePosition,techDesc,imageDesc,diagnoseDesc):
+    def __init__(self,diagnoseMethod=None,diagnosePosition=None,techDesc=None,imageDesc=None,diagnoseDesc=None):
         self.diagnoseMethod=diagnoseMethod
         self.diagnosePosition=diagnosePosition
         self.techDesc=techDesc
@@ -145,6 +146,66 @@ class DiagnoseTemplate(Base):
                                  DiagnoseTemplate.imageDesc).filter(DiagnoseTemplate.diagnoseMethod==diagnoseMethod,
                                                                            DiagnoseTemplate.diagnosePosition==diagnosePosition) \
                 .group_by(DiagnoseTemplate.diagnoseDesc).all()
+
+
+class Report(Base):
+    __tablename__ = 'Report'
+    __table_args__ = {
+        'mysql_charset': 'utf8',
+        }
+
+    id = sa.Column(sa.Integer, primary_key = True, autoincrement = True)
+    seriesNumber=sa.Column(sa.String(256))
+    fileUrl=sa.Column(sa.String(256))
+    techDesc=sa.Column(sa.String(512))
+    imageDesc=sa.Column(sa.TEXT)
+    diagnoseDesc=sa.Column(sa.String(512))
+    type=sa.Column(sa.Integer)
+    status=sa.Column(sa.Integer)
+    #sa.Index('diagnoseTemplate_method_position_diagnoseDesc', 'diagnoseMethod', 'diagnosePosition','diagnoseDesc')
+
+    def __init__(self,techDesc=None,imageDesc=None,diagnoseDesc=None,fileUrl=None,status=None):
+        self.seriesNumber=uuid.uuid1()
+        self.fileUrl=fileUrl
+        self.techDesc=techDesc
+        self.imageDesc=imageDesc
+        self.diagnoseDesc=diagnoseDesc
+        if status:
+            self.status=status
+        else:
+            self.status=ReportStatus.Draft
+    @classmethod
+    def save(cls,report):
+        if report:
+            session.add(report)
+            session.commit()
+            session.flush()
+    @classmethod
+    def getReportById(cls,reportId):
+        if reportId:
+            return session.query(Report).filter(Report.id==reportId).first()
+    @classmethod
+    def update(cls,reportId,status=None,fileUrl=None,techDesc=None,imageDesc=None,diagnoseDesc=None):
+        if reportId is None:
+            return
+        report=session.query(Report).filter(Report.id==reportId).first()
+        if report:
+            if status:
+                report.status=status
+            if fileUrl:
+                report.fileUrl=fileUrl
+            if techDesc:
+                report.techDesc=techDesc
+            if imageDesc:
+                report.imageDesc=imageDesc
+            if diagnoseDesc:
+                report.diagnoseDesc=diagnoseDesc
+        session.commit()
+        session.flush()
+        return report
+
+
+
 
 
 

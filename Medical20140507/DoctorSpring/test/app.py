@@ -28,6 +28,17 @@ class FlaskrTestCase(unittest.TestCase):
         rs = self.app.get('/observer/1/diagnoseCommentList.json',follow_redirects=True)
         print rs
 
+    def test_getPostionList(self):
+        #self.login('admin', 'default')
+
+        rs = self.app.get('/diagnoseTemplate/postionList?diagnoseMethod=x线',follow_redirects=True)
+        print rs
+    def test_getDiagnoseAndImageDescList(self):
+        #self.login('admin', 'default')
+
+        rs = self.app.get('/diagnoseTemplate/diagnoseAndImageDesc?diagnoseMethod=x线&diagnosePostion=骨关节病变',follow_redirects=True)
+        print rs
+
     def test_addConsult(self):
         rv = self.app.post('/consult/add', data=dict(
             userId=1,
